@@ -399,7 +399,7 @@ class FlightTab(Tab, flight_tab_class):
         lg.add_variable("motor.m3")
         lg.add_variable("motor.m4")
         lg.add_variable("sys.canfly")
-
+        logger.info("Jobs Connected function is called")
         self._hlCommander = PositionHlCommander(
             self.helper.cf,
             x=0.0, y=0.0, z=0.0,
@@ -612,12 +612,19 @@ class FlightTab(Tab, flight_tab_class):
 
     def alt1_updated(self, state):
         if state:
+            # self._hlCommander.up(0.5)
             logger.info("Alt 1 Button is pressed, and the StartState Z is %.2f",self.StartStateZ)
+            self._hlCommander.up(self.StartStateZ)
             # self.targetThrust.setEnabled(False)
             # self.targetHeight.setEnabled(True)
 
     def alt2_updated(self, state):
-        self.helper.cf.param.set_value("ring.headlightEnable", str(state))
+        if state:
+            self.IsFirst=True
+        # else:
+        #     logger.info("Alt 2 Button is pressed, stop go to ")
+        #     self._hlCommander.land(self.StartStateZ)
+        #self.helper.cf.param.set_value("ring.headlightEnable", str(state))
         # if state:
         #     logger.info("Alt 2 Button is pressed, and the final Z is %.2f",self.StartStateZ)
         #     self.targetThrust.setEnabled(True)
