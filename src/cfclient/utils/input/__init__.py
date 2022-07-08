@@ -424,7 +424,7 @@ class JoystickReader(object):
                     try:
                         self.alt1_updated.call(data.alt1)
                     except Exception as e:
-                        logger.warning("Exception while doing callback from"
+                        logger.warning("Exception while doing callback from "
                                        "input-device for alt1: {}".format(e))
                 if data.toggled.alt2:
                     try:

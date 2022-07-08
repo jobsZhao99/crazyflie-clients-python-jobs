@@ -94,6 +94,8 @@ class CommanderAction(Enum):
 
 
 class FlightTab(Tab, flight_tab_class):
+    StartStateZ=float(0.0)
+    IsFirst=True
     uiSetupReadySignal = pyqtSignal()
 
     _log_data_signal = pyqtSignal(int, object, object)
@@ -296,11 +298,13 @@ class FlightTab(Tab, flight_tab_class):
                 self._update_flight_commander(True)
 
     def _pose_data_received(self, pose_logger, pose):
+        if self.IsFirst:
+            self.StartStateZ=pose[2]
+            self.IsFirst=False;
         if self.isVisible():
             estimated_z = pose[2]
             roll = pose[3]
             pitch = pose[4]
-
             self.estimateX.setText(("%.2f" % pose[0]))
             self.estimateY.setText(("%.2f" % pose[1]))
             self.estimateZ.setText(("%.2f" % estimated_z))
@@ -608,13 +612,18 @@ class FlightTab(Tab, flight_tab_class):
 
     def alt1_updated(self, state):
         if state:
-            new_index = (self._ring_effect+1) % (self._ledring_nbr_effects+1)
-            self.helper.cf.param.set_value("ring.effect",
-                                           str(new_index))
+            logger.info("Alt 1 Button is pressed, and the StartState Z is %.2f",self.StartStateZ)
+            # self.targetThrust.setEnabled(False)
+            # self.targetHeight.setEnabled(True)
 
     def alt2_updated(self, state):
         self.helper.cf.param.set_value("ring.headlightEnable", str(state))
-
+        # if state:
+        #     logger.info("Alt 2 Button is pressed, and the final Z is %.2f",self.StartStateZ)
+        #     self.targetThrust.setEnabled(True)
+        #     self.targetHeight.setEnabled(False)
+        # else:
+        #     self.IsFirst=True
     def _all_params_updated(self):
         self._ring_populate_dropdown()
         self._populate_assisted_mode_dropdown()
