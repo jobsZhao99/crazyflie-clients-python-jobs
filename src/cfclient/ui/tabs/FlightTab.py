@@ -612,6 +612,7 @@ class FlightTab(Tab, flight_tab_class):
 
     def alt1_updated(self, state):
         if state:
+             ###JobsChanged
             # self._hlCommander.up(0.5)
             logger.info("Alt 1 Button is pressed, and the StartState Z is %.2f",self.StartStateZ)
             self._hlCommander.up(self.StartStateZ)
@@ -620,6 +621,7 @@ class FlightTab(Tab, flight_tab_class):
 
     def alt2_updated(self, state):
         if state:
+             ###JobsChanged
             self.IsFirst=True
         # else:
         #     logger.info("Alt 2 Button is pressed, stop go to ")
